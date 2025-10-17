@@ -43,7 +43,7 @@ def gen_MHC_recursive(length:int, n_on_bits:int, dist_cut:int, code_list:list, c
 
     # Find the candidates for the next on-bit
 
-    on_bit_candidates = [i for i in range(length) if not i in chosen_on_bits]
+    on_bit_candidates = [i for i in range(length) if i not in chosen_on_bits]
 
     # The number of on bits after this round of addition
 

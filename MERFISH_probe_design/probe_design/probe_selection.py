@@ -33,11 +33,10 @@ def select_probes_greedy_stochastic_one_df(df:pd.core.frame.DataFrame, N_probes_
 
     # Select probes
     selected_indices = []
-    rest_indices = [i for i in range(df.shape[0])]
+    rest_indices = set(range(df.shape[0]))
     for i in range(N_probes_per_transcript):
-        
+
         # Calculate the scores if a probe is to be added
-        #trial_scores = [score_probe_subset(df, selected_indices + [r_id], on_bits) for r_id in rest_indices]
         trial_scores = []
         for r_id in rest_indices:
             # Calculate the number of overlaps
@@ -57,12 +56,13 @@ def select_probes_greedy_stochastic_one_df(df:pd.core.frame.DataFrame, N_probes_
 
         # Get the indices with the lowest score
         score_min = min(trial_scores)
-        lowest_score_ids = [rest_indices[j] for j in range(len(rest_indices)) if trial_scores[j] == score_min]
+        rest_indices_list = list(rest_indices)
+        lowest_score_ids = [rest_indices_list[j] for j in range(len(rest_indices_list)) if trial_scores[j] == score_min]
 
         # Randomly select an ID
         selected_id = np.random.choice(lowest_score_ids)
         selected_indices.append(selected_id)
-        rest_indices.remove(selected_id)
+        rest_indices.discard(selected_id)
 
         # Update the tracking records
         # Calculate the number of overlaps

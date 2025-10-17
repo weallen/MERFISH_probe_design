@@ -58,8 +58,6 @@ def add_readout_seqs_to_probes_of_transcript_random(probe_table:pd.core.frame.Da
     # sort by shift:
     probe_table = probe_table.sort_values(by='shift')
     for i, row in probe_table.iterrows():
-        
-    #for i in range(probe_table.shape[0]):
         # Choose on-bits
         # Add the same readout probes if each_probe_1_on_bit is True
         if each_probe_1_on_bit:
@@ -77,15 +75,13 @@ def add_readout_seqs_to_probes_of_transcript_random(probe_table:pd.core.frame.Da
         seq = row['target_sequence']
         ro_names = ''
 
-        #n_left = np.random.choice([np.floor(N_readout_per_probe / 2), np.floor((N_readout_per_probe + 1) / 2)]) # randomly assign a half(+-0.5) to the left or right
-        #make n_left not random:
+        # Make n_left not random
         n_left = np.floor(N_readout_per_probe / 2)
-        
+
         for j, ob in enumerate(probe_on_bits):
-            
-            ro_name = on_bit_dict[ob][0] 
+
+            ro_name = on_bit_dict[ob][0]
             ro_seq = on_bit_dict[ob][1]
-            #print(j, ob, ro_name, ro_seq)
             if j < n_left:
                 ro_names = ro_name + ':' + ro_names 
                 seq = ro_seq + spacer + seq

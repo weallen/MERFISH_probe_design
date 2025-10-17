@@ -65,7 +65,6 @@ def probe_dict_to_df(probe_dict:dict):
                 df = probe_dict[gk][tk].copy()
             else:
                 df = pd.concat([df, probe_dict[gk][tk]], ignore_index=True)
-                #df = df.append(probe_dict[gk][tk], ignore_index=True)
     return df
 
 def select_transcripts_by_ids(probe_dict:dict, transcript_ids:set):

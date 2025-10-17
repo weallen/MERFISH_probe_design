@@ -8,7 +8,7 @@ setup(
     author='Xingjie Pan',
     author_email='xingjiepan@gmail.com',
     url='https://github.com/xingjiepan/MERFISH_probe_design',
-    packages=setuptools.find_packages(include=['MERFISH_probe_design*']),
+    packages=find_packages(include=['MERFISH_probe_design*']),
     install_requires=[
         'numpy',
         'matplotlib',

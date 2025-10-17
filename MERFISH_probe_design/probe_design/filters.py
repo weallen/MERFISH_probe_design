@@ -4,12 +4,12 @@ from multiprocessing import Pool
 
 import numpy as np
 import pandas as pd
-from Bio.SeqUtils import GC
+from Bio.SeqUtils import gc_fraction
 from Bio.SeqUtils import MeltingTemp
 
 
-def filter_probe_dict_by_metric(probe_dict:pd.core.frame.DataFrame, column_key:str, 
-        lower_bound:float=-np.Inf, upper_bound:float=np.Inf):
+def filter_probe_dict_by_metric(probe_dict:pd.core.frame.DataFrame, column_key:str,
+        lower_bound:float=-np.inf, upper_bound:float=np.inf):
     '''Filter the probe dictionary by a metric.'''
     for gk in probe_dict.keys():
         print(gk)
@@ -22,17 +22,17 @@ def filter_probe_dict_by_metric(probe_dict:pd.core.frame.DataFrame, column_key:s
             print(f'\t{tk}: {new_df.shape[0]} / {probe_dict[gk][tk].shape[0]} probes passed the filter {lower_bound} < {column_key} <  {upper_bound}.')
             probe_dict[gk][tk] = new_df
 
-def calc_gc_for_probe_dict(probe_dict:pd.core.frame.DataFrame, 
+def calc_gc_for_probe_dict(probe_dict:pd.core.frame.DataFrame,
         column_key_seq:str='target_sequence', column_key_write='target_GC'):
     '''Calculate GC content of sequences under the column_key_seq column in the probe dictionary.
     The GC content is reported in percentile.
     '''
     for gk in probe_dict.keys():
         for tk in probe_dict[gk].keys():
-            
+
             gcs = []
             for seq in probe_dict[gk][tk][column_key_seq]:
-                gcs.append(GC(seq))
+                gcs.append(gc_fraction(seq) * 100)
 
             probe_dict[gk][tk][column_key_write] = pd.Series(gcs, index=probe_dict[gk][tk].index)
 
@@ -85,15 +85,15 @@ def calc_tm_JM(sequence:str, monovalentSalt:float=0.3, probeConc:float=5e-9):
     S = np.cumsum(dG[1,:])[-1]
 
     # Determine ends
-    fivePrimeAT = (intSeq[0] == 0) | (intSeq[0]  == 3);
-    threePrimeAT = (intSeq[-1] == 0) | (intSeq[-1] == 3);
+    fivePrimeAT = (intSeq[0] == 0) | (intSeq[0]  == 3)
+    threePrimeAT = (intSeq[-1] == 0) | (intSeq[-1] == 3)
 
-    H = H + 0.2 + 2.2*fivePrimeAT + 2.2*threePrimeAT;
-    S = S + -5.7 + 6.9*fivePrimeAT + 6.9*threePrimeAT;
+    H = H + 0.2 + 2.2*fivePrimeAT + 2.2*threePrimeAT
+    S = S + -5.7 + 6.9*fivePrimeAT + 6.9*threePrimeAT
 
-    S = S + 0.368*(len(sequence)-1)*np.log(monovalentSalt);
+    S = S + 0.368*(len(sequence)-1)*np.log(monovalentSalt)
 
-    return H*1000 / (S + 1.9872 * np.log(probeConc)) - 273.15;
+    return H*1000 / (S + 1.9872 * np.log(probeConc)) - 273.15
 
 def calc_tm_JM_for_transcript(df, monovalentSalt, probe_conc, column_key_seq, column_key_write):
     tms = []

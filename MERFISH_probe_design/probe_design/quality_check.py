@@ -14,7 +14,7 @@ def check_and_standardize_transcriptome(transcriptome:pd.core.frame.DataFrame,
     # Check the existance of standarad columns
     standard_columns = ['transcript_id', 'sequence', 'gene_id', 'gene_short_name', 'FPKM']
     for sc in standard_columns:
-        if not sc in transcriptome.columns:
+        if sc not in transcriptome.columns:
             print(f'\033[91m ERROR: missing the standard column {sc}!')
 
     # Remove non-standard columns 

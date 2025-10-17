@@ -86,12 +86,13 @@ def optimize_bit_assignments_simulated_annealing_parallel(ct_expr:np.ndarray,
     '''Run the simulated annealing in parallel.'''
     args = [[ct_expr, ct_weights, binary_codes, N_rounds, N_iter] for i in range(N_test)]
 
-    # Run simulated annealing for N_test times 
+    # Run simulated annealing for N_test times
     if N_threads == 1:
         print("Not multi-processing if N_threads==1. ")
         results = [optimize_bit_assignments_simulated_annealing(*_arg) for _arg in args]
-    with Pool(N_threads) as p:
-        results = p.starmap(optimize_bit_assignments_simulated_annealing, args)
+    else:
+        with Pool(N_threads) as p:
+            results = p.starmap(optimize_bit_assignments_simulated_annealing, args)
 
     # Return the best result
     best_id = np.argmin([r[0] for r in results]) 
